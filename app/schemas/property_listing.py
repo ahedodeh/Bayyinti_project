@@ -22,7 +22,7 @@ class PropertyListingCreate(BaseModel):
 
 class PropertyListingResponse(PropertyListingCreate):
     id: int
-    number_of_rooms: int  
+    number_of_rooms: Optional[int] = 0
 
     class Config:
         orm_mode = True
