@@ -13,7 +13,7 @@ DB_HOST = os.getenv("DB_HOST")
 
 DB_PASS_ENCODED = quote_plus(DB_PASS)
 
-DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASS_ENCODED}@{DB_HOST}/{DB_NAME}"
+DATABASE_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASS_ENCODED}@{DB_HOST}/{DB_NAME}"
 
 engine = create_engine(DATABASE_URL)
 
