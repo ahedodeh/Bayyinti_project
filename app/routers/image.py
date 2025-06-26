@@ -1,5 +1,3 @@
-# routers/room_image.py
-
 from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
 from sqlalchemy.orm import Session
 import shutil
@@ -7,16 +5,16 @@ import os
 from uuid import uuid4
 
 from app.database import get_db
-from app.crud import room_image as crud
-from app.schemas.room_image import RoomImageResponse
+from app.crud import image as crud
+from app.schemas.image import ImageResponse
 
-router = APIRouter(prefix="/room-images", tags=["Room Images"])
+router = APIRouter(prefix="/images", tags=["Images"])
 
-UPLOAD_DIR = "uploads/room_images"
+UPLOAD_DIR = "uploads/images"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-@router.post("/", response_model=RoomImageResponse)
-def upload_image(room_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
+@router.post("/", response_model=ImageResponse)
+def upload_image(entity_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
     ext = file.filename.split(".")[-1]
     filename = f"{uuid4()}.{ext}"
     file_path = os.path.join(UPLOAD_DIR, filename)
@@ -24,19 +22,21 @@ def upload_image(room_id: int, file: UploadFile = File(...), db: Session = Depen
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    image_url = f"/{file_path}"  # for local path. You can adjust this if using cloud
-    return crud.create_room_image(db, room_id=room_id, image_url=image_url)
+    image_url = f"/{file_path}"
+    image = crud.create_image(db, entity_id=entity_id, image_url=image_url)
+    return ImageResponse.from_orm(image)
 
-@router.get("/{image_id}", response_model=RoomImageResponse)
+@router.get("/{image_id}", response_model=ImageResponse)
 def read_image(image_id: int, db: Session = Depends(get_db)):
     image = crud.get_image_by_id(db, image_id)
     if not image:
         raise HTTPException(status_code=404, detail="Image not found")
-    return image
+    return ImageResponse.from_orm(image)
 
-@router.get("/room/{room_id}", response_model=list[RoomImageResponse])
-def read_images_by_room(room_id: int, db: Session = Depends(get_db)):
-    return crud.get_images_by_room_id(db, room_id)
+@router.get("/entity/{entity_id}", response_model=list[ImageResponse])
+def read_images_by_entity(entity_id: int, db: Session = Depends(get_db)):
+    images = crud.get_images_by_entity_id(db, entity_id)
+    return [ImageResponse.from_orm(img) for img in images]
 
 @router.delete("/{image_id}")
 def delete_image(image_id: int, db: Session = Depends(get_db)):
