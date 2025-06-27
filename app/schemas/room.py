@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import date, datetime
-from app.enums.room_type_enum import RoomTypeEnum
+from app.enum.room_type_enum import RoomTypeEnum
 
 class RoomBase(BaseModel):
     description: Optional[str]

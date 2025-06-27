@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
-from app.enums.shared_space_type_enum import SharedSpaceTypeEnum
+from app.enum.shared_space_type_enum import SharedSpaceTypeEnum
 
 class SharedSpaceBase(BaseModel):
     room_type: SharedSpaceTypeEnum

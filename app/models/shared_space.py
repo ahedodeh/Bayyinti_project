@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum as SqlEnum, DateTime, func
 from sqlalchemy.orm import relationship
 from app.database import Base
-from app.enums.shared_space_type_enum import SharedSpaceTypeEnum
+from app.enum.shared_space_type_enum import SharedSpaceTypeEnum
 
 class SharedSpace(Base):
     __tablename__ = "shared_spaces"

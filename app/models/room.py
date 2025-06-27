@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, Float, Date, Enum, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
 from app.database import Base
-from app.enums.room_type_enum import RoomTypeEnum
+from app.enum.room_type_enum import RoomTypeEnum
 
 class Room(Base):
     __tablename__ = "rooms"
