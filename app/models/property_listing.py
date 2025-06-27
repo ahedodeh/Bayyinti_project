@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, Boolean, Enum as SqlEnum, DateTime, func
 from sqlalchemy.orm import relationship
 from app.database import Base
-from app.enums.city import CityEnum
-from app.enums.country import CountryEnum
+# from app.enums.city import CityEnum
+# from app.enums.country import CountryEnum
 
 
 class PropertyListing(Base):
@@ -26,8 +26,8 @@ class PropertyListing(Base):
     has_internet = Column(Boolean, default=False)
     property_type = Column(String(100), nullable=True)
     property_image = Column(String(255), nullable=True)
-    city = Column(SqlEnum(CityEnum), nullable=True)
-    country = Column(SqlEnum(CountryEnum), nullable=True)
+    # city = Column(SqlEnum(CityEnum), nullable=True)
+    # country = Column(SqlEnum(CountryEnum), nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 

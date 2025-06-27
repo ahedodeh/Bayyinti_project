@@ -2,8 +2,8 @@ from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime
 from app.schemas.room import RoomResponse
-from app.enums.city import CityEnum
-from app.enums.country import CountryEnum
+# from app.enums.city import CityEnum
+# from app.enums.country import CountryEnum
 
 
 class PropertyListingCreate(BaseModel):
@@ -23,8 +23,8 @@ class PropertyListingCreate(BaseModel):
     has_internet: Optional[bool] = False
     property_type: Optional[str]
     property_image: Optional[str]
-    city: Optional[CityEnum]
-    country: Optional[CountryEnum]
+    # city: Optional[CityEnum]
+    # country: Optional[CountryEnum]
 
 
 class PropertyListingResponse(PropertyListingCreate):
