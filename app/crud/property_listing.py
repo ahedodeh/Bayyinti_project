@@ -15,7 +15,7 @@ def get_listing_by_id(db: Session, listing_id: int):
     return db.query(PropertyListing).filter(PropertyListing.id == listing_id).first()
 
 
-def get_listings_by_landlord(db: Session, landlord_id: int):
+def get_listings_by_landlord(db: Session, landlord_id: str):
     return db.query(PropertyListing).filter(PropertyListing.landlord_id == landlord_id).all()
 
 

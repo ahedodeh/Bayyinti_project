@@ -9,7 +9,7 @@ from app.enums.country import CountryEnum
 class PropertyListingCreate(BaseModel):
     building_name: Optional[str]
     building_number: Optional[str]
-    landlord_id: int
+    landlord_id: str
     title: Optional[str]
     description: Optional[str]
     floor_number: Optional[int]
