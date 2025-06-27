@@ -18,7 +18,7 @@ def read_by_id(id: int, db: Session = Depends(get_db)):
     return listing
 
 @router.get("/landlord/{landlord_id}", response_model=list[PropertyListingResponse])
-def read_by_landlord(landlord_id: int, db: Session = Depends(get_db)):
+def read_by_landlord(landlord_id: str, db: Session = Depends(get_db)):
     return crud.get_listings_by_landlord(db, landlord_id)
 
 @router.put("/{id}", response_model=PropertyListingResponse)

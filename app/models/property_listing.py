@@ -11,7 +11,7 @@ class PropertyListing(Base):
     id = Column(Integer, primary_key=True, index=True)
     building_name = Column(String(255), nullable=True)
     building_number = Column(String(50), nullable=True)
-    landlord_id = Column(Integer, nullable=False)
+    landlord_id = Column(String(255), nullable=False)
     title = Column(String(255), nullable=True)
     description = Column(String(255), nullable=True)
     floor_number = Column(Integer, nullable=True)

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 class BuildingBase(BaseModel):
     name: str
     address: str
-    landlord_id: int
+    landlord_id: str
 
 class BuildingCreate(BuildingBase):
     pass
