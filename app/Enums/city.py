@@ -4,4 +4,3 @@ class CityEnum(str, Enum):
     nablus = "Nablus"
     ramahllah = "Ramallah"
     jenin = "Jenin"
-  

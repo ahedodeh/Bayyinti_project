@@ -32,4 +32,4 @@ class PropertyListing(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     rooms = relationship("Room", back_populates="property_listing", cascade="all, delete-orphan")
-    rooms = relationship("Room", back_populates="property_listing", cascade="all, delete-orphan")
+    shared_spaces = relationship("SharedSpace", back_populates="property_listing", cascade="all, delete-orphan")
