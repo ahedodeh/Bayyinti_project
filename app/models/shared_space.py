@@ -13,4 +13,4 @@ class SharedSpace(Base):
     description = Column(String(255), nullable=True)
 
     property_id = Column(Integer, ForeignKey("property_listings.id"), nullable=False)
-    property_listing = relationship("PropertyListing", backref="shared_spaces")
+    property_listing = relationship("PropertyListing", back_populates="shared_spaces")
