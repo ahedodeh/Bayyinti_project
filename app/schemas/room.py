@@ -2,7 +2,8 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date, datetime
 from app.enum.room_type_enum import RoomTypeEnum
-
+from typing import List
+from app.schemas.image import ImageResponse
 class RoomBase(BaseModel):
     description: Optional[str]
     price_of_bed_per_month: Optional[float]
@@ -24,6 +25,7 @@ class RoomResponse(RoomBase):
     id: int
     property_listing_id: int
     created_at: Optional[datetime]
+    images: Optional[List[ImageResponse]] = [] 
 
     class Config:
         orm_mode = True
@@ -44,3 +46,5 @@ class RoomUpdate(BaseModel):
     has_internal_balcony: Optional[bool] = None
     has_ac: Optional[bool] = None
     has_office: Optional[bool] = None
+    image_ids_to_delete: Optional[List[int]] = None
+
