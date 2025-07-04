@@ -25,3 +25,7 @@ class SharedSpaceResponse(BaseModel):
         json_encoders = {
             datetime: lambda v: v.strftime("%Y-%m-%d %H:%M:%S") if v else None
         }
+
+class SharedSpaceUpdate(BaseModel):
+    room_type: Optional[SharedSpaceTypeEnum] = None
+    description: Optional[str] = None

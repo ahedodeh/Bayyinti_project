@@ -7,3 +7,4 @@ python-multipart
 passlib[bcrypt]
 pydantic
 psycopg2-binary
+alembic

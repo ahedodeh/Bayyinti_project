@@ -13,6 +13,7 @@ class Room(Base):
     price_of_bed_per_month = Column(Float, nullable=True)
     available_from = Column(Date, nullable=True)
     is_active = Column(Boolean, default=True)
+    is_available = Column(Boolean, default=True)
 
     room_type = Column(Enum(RoomTypeEnum), nullable=True)
     number_of_beds = Column(Integer, nullable=True)

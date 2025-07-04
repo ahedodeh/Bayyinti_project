@@ -4,7 +4,6 @@ from app.database import Base
 from app.enum.city import CityEnum
 from app.enum.country import CountryEnum
 
-
 class PropertyListing(Base):
     __tablename__ = "property_listings"
 
@@ -28,7 +27,6 @@ class PropertyListing(Base):
     property_image = Column(String(255), nullable=True)
     city = Column(SqlEnum(CityEnum), nullable=True)
     country = Column(SqlEnum(CountryEnum), nullable=True)
-
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     rooms = relationship("Room", back_populates="property_listing", cascade="all, delete-orphan")

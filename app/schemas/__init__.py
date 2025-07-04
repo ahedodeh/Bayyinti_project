@@ -1,5 +1,4 @@
 from .student import *
-from .landlord import *
 from .building import *
 from .property_listing import *
 from .room import *

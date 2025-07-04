@@ -18,3 +18,5 @@ def read_root():
 
 
 # uvicorn app.main:app --reload
+# alembic revision --autogenerate -m "add is_available column to rooms"
+# alembic upgrade head
