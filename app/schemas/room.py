@@ -8,6 +8,7 @@ class RoomBase(BaseModel):
     price_of_bed_per_month: Optional[float]
     available_from: Optional[date]
     is_active: Optional[bool] = True
+    is_available: Optional[bool] = True
     room_type: Optional[RoomTypeEnum]
     number_of_beds: Optional[int]
     number_of_available_beds: Optional[int]
@@ -25,7 +26,7 @@ class RoomResponse(RoomBase):
     created_at: Optional[datetime]
 
     class Config:
-        from_attributes = True
+        orm_mode = True
         json_encoders = {
             datetime: lambda v: v.strftime("%Y-%m-%d %H:%M:%S") if v else None
         }
@@ -35,6 +36,7 @@ class RoomUpdate(BaseModel):
     price_of_bed_per_month: Optional[float] = None
     available_from: Optional[date] = None
     is_active: Optional[bool] = None
+    is_available: Optional[bool] = None
     room_type: Optional[RoomTypeEnum] = None
     number_of_beds: Optional[int] = None
     number_of_available_beds: Optional[int] = None

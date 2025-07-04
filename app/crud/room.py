@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.room import Room
-from app.schemas.room import RoomCreate
-from app.schemas.room import RoomUpdate
+from app.schemas.room import RoomCreate, RoomUpdate
 
 def create_room(db: Session, room_data: RoomCreate):
     room = Room(**room_data.dict())
