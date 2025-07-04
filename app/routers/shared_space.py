@@ -21,12 +21,13 @@ def get_shared_space(id: int, db: Session = Depends(get_db)):
 def get_shared_spaces_by_property(property_id: int, db: Session = Depends(get_db)):
     return crud.get_shared_spaces_by_property(db, property_id)
 
-@router.put("/{id}", response_model=SharedSpaceResponse)
-def update_shared_space(id: int, payload: SharedSpaceUpdate, db: Session = Depends(get_db)):
+@router.put("/{id}", response_model=SharedSpaceResponse, summary="Partial Update")
+def partial_update_shared_space(id: int, payload: SharedSpaceUpdate, db: Session = Depends(get_db)):
     updated_shared_space = crud.update_shared_space(db, id, payload)
     if not updated_shared_space:
         raise HTTPException(status_code=404, detail="Shared space not found")
     return updated_shared_space
+
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_shared_space(id: int, db: Session = Depends(get_db)):

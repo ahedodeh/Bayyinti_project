@@ -29,3 +29,16 @@ class RoomResponse(RoomBase):
         json_encoders = {
             datetime: lambda v: v.strftime("%Y-%m-%d %H:%M:%S") if v else None
         }
+
+class RoomUpdate(BaseModel):
+    description: Optional[str] = None
+    price_of_bed_per_month: Optional[float] = None
+    available_from: Optional[date] = None
+    is_active: Optional[bool] = None
+    room_type: Optional[RoomTypeEnum] = None
+    number_of_beds: Optional[int] = None
+    number_of_available_beds: Optional[int] = None
+    has_internal_bathroom: Optional[bool] = None
+    has_internal_balcony: Optional[bool] = None
+    has_ac: Optional[bool] = None
+    has_office: Optional[bool] = None

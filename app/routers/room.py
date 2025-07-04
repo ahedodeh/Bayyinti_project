@@ -4,7 +4,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas.room import RoomCreate, RoomResponse
+from app.schemas.room import RoomCreate, RoomResponse, RoomUpdate
 from app.crud import room as room_crud
 
 router = APIRouter(prefix="/rooms", tags=["Rooms"])
@@ -24,8 +24,8 @@ def read(room_id: int, db: Session = Depends(get_db)):
 def get_by_listing(listing_id: int, db: Session = Depends(get_db)):
     return room_crud.get_rooms_by_listing_id(db, listing_id)
 
-@router.put("/{room_id}", response_model=RoomResponse)
-def update(room_id: int, updates: dict, db: Session = Depends(get_db)):
+@router.put("/{room_id}", response_model=RoomResponse, summary="Partial Update")
+def partial_update(room_id: int, updates: RoomUpdate, db: Session = Depends(get_db)):
     updated = room_crud.update_room(db, room_id, updates)
     if not updated:
         raise HTTPException(status_code=404, detail="Room not found")
