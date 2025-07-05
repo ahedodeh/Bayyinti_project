@@ -9,4 +9,5 @@ class Image(Base):
     id = Column(Integer, primary_key=True, index=True)
     entity_id = Column(Integer, nullable=False)
     image_url = Column(String(255), nullable=False)
+    entity_type = Column(String(50), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
