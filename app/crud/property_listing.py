@@ -57,3 +57,4 @@ def get_all_listings(db: Session):
     for listing in listings:
         listing.number_of_rooms = len(listing.rooms) if listing.rooms else 0
     return listings
+

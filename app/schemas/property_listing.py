@@ -5,6 +5,8 @@ from app.enum.city import CityEnum
 from app.enum.country import CountryEnum
 from app.schemas.room import RoomResponse
 from app.schemas.shared_space import SharedSpaceResponse
+from pydantic import model_validator
+from app.config import BASE_URL
 
 class PropertyListingCreate(BaseModel):
     building_name: Optional[str]
@@ -53,6 +55,17 @@ class PropertyListingResponse(PropertyListingCreate):
 
     rooms: Optional[List[RoomResponse]] = []
     shared_spaces: Optional[List[SharedSpaceResponse]] = []
+
+    property_image: Optional[str] = None
+
+    @model_validator(mode="after")
+    def generate_image_url(self):
+        if self.property_image:
+            clean_image = self.property_image.replace("\\", "/").lstrip("/")
+            if not clean_image.startswith("http"):
+                self.property_image = f"{BASE_URL}/{clean_image}"
+        return self
+
 
     class Config:
         from_attributes = True

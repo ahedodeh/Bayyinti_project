@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from app.models.room import Room
 from app.schemas.room import RoomCreate, RoomUpdate
+from app.models.image import Image
+from app.schemas.room import RoomResponse
 
 def create_room(db: Session, room_data: RoomCreate):
     room = Room(**room_data.dict())
@@ -30,3 +32,12 @@ def delete_room(db: Session, room_id: int):
         db.delete(room)
         db.commit()
     return room
+
+def get_rooms_with_images(db: Session, listing_id: int):
+    rooms = db.query(Room).filter(Room.property_listing_id == listing_id).all()
+
+    for room in rooms:
+        images = db.query(Image).filter_by(entity_id=room.id, entity_type='room').all()
+        room.images = images  
+
+    return [RoomResponse.model_validate(room) for room in rooms]
