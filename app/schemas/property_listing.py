@@ -15,8 +15,8 @@ class PropertyListingCreate(BaseModel):
     title: Optional[str]
     description: Optional[str]
     floor_number: Optional[int]
-    location_lat: Optional[str]
-    location_lon: Optional[str]
+    location_lat: Optional[float]
+    location_lon: Optional[float]
     is_active: Optional[bool] = True
     gender_preference: Optional[str]
     has_gas: Optional[bool] = False
