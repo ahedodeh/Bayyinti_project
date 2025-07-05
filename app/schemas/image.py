@@ -8,6 +8,7 @@ class ImageCreate(BaseModel):
 class ImageResponse(BaseModel):
     id: int
     entity_id: int
+    entity_type: str
     image_url: str
     created_at: Optional[datetime] 
     class Config:

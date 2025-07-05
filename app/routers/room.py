@@ -67,7 +67,7 @@ async def create_room(
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
 
-        image_record = Image(entity_id=room.id, image_url=file_path)
+        image_record = Image(entity_id=room.id, entity_type="room", image_url=file_path)
         db.add(image_record)
 
     db.commit()
@@ -81,15 +81,25 @@ def read(room_id: int, db: Session = Depends(get_db)):
     room = room_crud.get_room_by_id(db, room_id)
     if not room:
         raise HTTPException(status_code=404, detail="Room not found")
-    room.images = db.query(Image).filter(Image.entity_id == room.id).all()
+    
+    room.images = db.query(Image).filter(
+        Image.entity_id == room.id,
+        Image.entity_type == "room"
+    ).all()
+    
     return room
+
 
 @router.get("/listing/{listing_id}", response_model=List[RoomResponse])
 def get_by_listing(listing_id: int, db: Session = Depends(get_db)):
     rooms = room_crud.get_rooms_by_listing_id(db, listing_id)
     for room in rooms:
-        room.images = db.query(Image).filter(Image.entity_id == room.id).all()
+        room.images = db.query(Image).filter(
+            Image.entity_id == room.id,
+            Image.entity_type == "room"
+        ).all()
     return rooms
+
 
 
 @router.put("/{room_id}", response_model=RoomResponse)
@@ -158,7 +168,7 @@ async def partial_update(
             with open(file_path, "wb") as buffer:
                 shutil.copyfileobj(image.file, buffer)
 
-            db.add(Image(entity_id=room.id, image_url=file_path))
+            db.add(Image(entity_id=room.id, entity_type="room",  image_url=file_path))
 
     db.commit()
     room.images = db.query(Image).filter(Image.entity_id == room.id).all()
