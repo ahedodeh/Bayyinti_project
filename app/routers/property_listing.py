@@ -89,9 +89,24 @@ async def update_listing_put(
     city: Optional[CityEnum] = Form(None),
     country: Optional[CountryEnum] = Form(None),
     image: UploadFile = File(None),
+    delete_image: Optional[bool] = Form(False),
     db: Session = Depends(get_db),
 ):
-    image_url = save_image_file(image) if image else None
+    existing_listing = crud.get_listing_by_id(db, id)
+    if not existing_listing:
+        raise HTTPException(status_code=404, detail="Listing not found")
+
+    image_url = existing_listing.property_image  
+
+    if delete_image:
+        if existing_listing.property_image:
+            image_path = existing_listing.property_image.lstrip("/")
+            if os.path.exists(image_path):
+                os.remove(image_path)
+        image_url = None  
+
+    elif image:
+        image_url = save_image_file(image)
 
     update_dict = {
         "landlord_id": landlord_id,
@@ -111,18 +126,17 @@ async def update_listing_put(
         "property_type": property_type,
         "city": city,
         "country": country,
-        "property_image": image_url,
+        "property_image": image_url,  # ضروري يتحدث دايمًا سواء حذف أو رفع جديد
     }
 
-    # احذف الحقول اللي قيمتها None عشان ما نحدثها
-    filtered_update = {k: v for k, v in update_dict.items() if v is not None}
+    filtered_update = {k: v for k, v in update_dict.items() if v is not None or k == "property_image"}
 
     data = PropertyListingUpdate(**filtered_update)
 
     listing = crud.update_listing(db, id, data)
-    if not listing:
-        raise HTTPException(status_code=404, detail="Listing not found")
     return listing
+
+
 
 @router.get("/{id}", response_model=PropertyListingResponse)
 def read_by_id(id: int, db: Session = Depends(get_db)):
