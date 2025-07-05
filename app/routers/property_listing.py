@@ -5,6 +5,7 @@ from app.schemas.property_listing import PropertyListingCreate, PropertyListingU
 from app.crud import property_listing as crud
 from app.enum.city import CityEnum
 from app.enum.country import CountryEnum
+from app.models.image import Image  # <-- استيراد موديل الصور
 import shutil, os
 from uuid import uuid4
 from typing import Optional
@@ -30,8 +31,8 @@ async def create(
     title: str = Form(None),
     description: str = Form(None),
     floor_number: int = Form(None),
-    location_lat: str = Form(None),
-    location_lon: str = Form(None),
+    location_lat: float = Form(None),
+    location_lon: float = Form(None),
     is_active: bool = Form(True),
     gender_preference: str = Form(None),
     has_gas: bool = Form(False),
@@ -77,8 +78,8 @@ async def update_listing_put(
     title: Optional[str] = Form(None),
     description: Optional[str] = Form(None),
     floor_number: Optional[int] = Form(None),
-    location_lat: Optional[str] = Form(None),
-    location_lon: Optional[str] = Form(None),
+    location_lat: Optional[float] = Form(None),
+    location_lon: Optional[float] = Form(None),
     is_active: Optional[bool] = Form(None),
     gender_preference: Optional[str] = Form(None),
     has_gas: Optional[bool] = Form(None),
@@ -96,14 +97,14 @@ async def update_listing_put(
     if not existing_listing:
         raise HTTPException(status_code=404, detail="Listing not found")
 
-    image_url = existing_listing.property_image  
+    image_url = existing_listing.property_image
 
     if delete_image:
         if existing_listing.property_image:
             image_path = existing_listing.property_image.lstrip("/")
             if os.path.exists(image_path):
                 os.remove(image_path)
-        image_url = None  
+        image_url = None
 
     elif image:
         image_url = save_image_file(image)
@@ -126,24 +127,29 @@ async def update_listing_put(
         "property_type": property_type,
         "city": city,
         "country": country,
-        "property_image": image_url,  # ضروري يتحدث دايمًا سواء حذف أو رفع جديد
+        "property_image": image_url,
     }
 
     filtered_update = {k: v for k, v in update_dict.items() if v is not None or k == "property_image"}
-
     data = PropertyListingUpdate(**filtered_update)
 
     listing = crud.update_listing(db, id, data)
     return listing
-
-
 
 @router.get("/{id}", response_model=PropertyListingResponse)
 def read_by_id(id: int, db: Session = Depends(get_db)):
     listing = crud.get_listing_by_id(db, id)
     if not listing:
         raise HTTPException(status_code=404, detail="Listing not found")
+
+    for room in listing.rooms:
+        room.images = db.query(Image).filter_by(entity_id=room.id, entity_type="room").all()
+
+    for shared in listing.shared_spaces:
+        shared.images = db.query(Image).filter_by(entity_id=shared.id, entity_type="shared_space").all()
+
     return listing
+
 
 @router.get("/landlord/{landlord_id}", response_model=list[PropertyListingResponse])
 def read_by_landlord(landlord_id: str, db: Session = Depends(get_db)):

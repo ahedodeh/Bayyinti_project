@@ -25,5 +25,6 @@ class Room(Base):
     has_office = Column(Boolean, default=False)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    images = []
 
     property_listing = relationship("PropertyListing", back_populates="rooms")
