@@ -1,8 +1,10 @@
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 from datetime import datetime
 from app.enum.city import CityEnum
 from app.enum.country import CountryEnum
+from app.schemas.room import RoomResponse
+from app.schemas.shared_space import SharedSpaceResponse
 
 class PropertyListingCreate(BaseModel):
     building_name: Optional[str]
@@ -48,6 +50,9 @@ class PropertyListingResponse(PropertyListingCreate):
     id: int
     number_of_rooms: Optional[int] = 0
     created_at: Optional[datetime]
+
+    rooms: Optional[List[RoomResponse]] = []
+    shared_spaces: Optional[List[SharedSpaceResponse]] = []
 
     class Config:
         from_attributes = True
