@@ -17,12 +17,18 @@ def get_listings_by_landlord(db: Session, landlord_id: str):
 
 def update_listing(db: Session, listing_id: int, data: PropertyListingUpdate):
     listing = db.query(PropertyListing).filter(PropertyListing.id == listing_id).first()
-    if listing:
-        for key, value in data.dict(exclude_unset=True).items():
-            setattr(listing, key, value)
-        db.commit()
-        db.refresh(listing)
+    if not listing:
+        return None
+
+    update_data = data.dict(exclude_unset=True)
+
+    for key, value in update_data.items():
+        setattr(listing, key, value)
+
+    db.commit()
+    db.refresh(listing)
     return listing
+
 
 def delete_listing(db: Session, listing_id: int):
     listing = db.query(PropertyListing).filter(PropertyListing.id == listing_id).first()

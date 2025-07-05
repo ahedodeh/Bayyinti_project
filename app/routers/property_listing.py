@@ -7,6 +7,7 @@ from app.enum.city import CityEnum
 from app.enum.country import CountryEnum
 import shutil, os
 from uuid import uuid4
+from typing import Optional
 
 router = APIRouter(prefix="/property-listings", tags=["Property Listings"])
 
@@ -68,50 +69,55 @@ async def create(
     return crud.create_property_listing(db, data)
 
 @router.put("/{id}", response_model=PropertyListingResponse)
-async def partial_update(
+async def update_listing_put(
     id: int,
-    landlord_id: str = Form(None),
-    building_name: str = Form(None),
-    building_number: str = Form(None),
-    title: str = Form(None),
-    description: str = Form(None),
-    floor_number: int = Form(None),
-    location_lat: str = Form(None),
-    location_lon: str = Form(None),
-    is_active: bool = Form(None),
-    gender_preference: str = Form(None),
-    has_gas: bool = Form(None),
-    has_electricity: bool = Form(None),
-    has_water: bool = Form(None),
-    has_internet: bool = Form(None),
-    property_type: str = Form(None),
-    city: CityEnum = Form(None),
-    country: CountryEnum = Form(None),
+    landlord_id: Optional[str] = Form(None),
+    building_name: Optional[str] = Form(None),
+    building_number: Optional[str] = Form(None),
+    title: Optional[str] = Form(None),
+    description: Optional[str] = Form(None),
+    floor_number: Optional[int] = Form(None),
+    location_lat: Optional[str] = Form(None),
+    location_lon: Optional[str] = Form(None),
+    is_active: Optional[bool] = Form(None),
+    gender_preference: Optional[str] = Form(None),
+    has_gas: Optional[bool] = Form(None),
+    has_electricity: Optional[bool] = Form(None),
+    has_water: Optional[bool] = Form(None),
+    has_internet: Optional[bool] = Form(None),
+    property_type: Optional[str] = Form(None),
+    city: Optional[CityEnum] = Form(None),
+    country: Optional[CountryEnum] = Form(None),
     image: UploadFile = File(None),
     db: Session = Depends(get_db),
 ):
     image_url = save_image_file(image) if image else None
 
-    data = PropertyListingUpdate(
-        landlord_id=landlord_id,
-        building_name=building_name,
-        building_number=building_number,
-        title=title,
-        description=description,
-        floor_number=floor_number,
-        location_lat=location_lat,
-        location_lon=location_lon,
-        is_active=is_active,
-        gender_preference=gender_preference,
-        has_gas=has_gas,
-        has_electricity=has_electricity,
-        has_water=has_water,
-        has_internet=has_internet,
-        property_type=property_type,
-        city=city,
-        country=country,
-        property_image=image_url,
-    )
+    update_dict = {
+        "landlord_id": landlord_id,
+        "building_name": building_name,
+        "building_number": building_number,
+        "title": title,
+        "description": description,
+        "floor_number": floor_number,
+        "location_lat": location_lat,
+        "location_lon": location_lon,
+        "is_active": is_active,
+        "gender_preference": gender_preference,
+        "has_gas": has_gas,
+        "has_electricity": has_electricity,
+        "has_water": has_water,
+        "has_internet": has_internet,
+        "property_type": property_type,
+        "city": city,
+        "country": country,
+        "property_image": image_url,
+    }
+
+    # احذف الحقول اللي قيمتها None عشان ما نحدثها
+    filtered_update = {k: v for k, v in update_dict.items() if v is not None}
+
+    data = PropertyListingUpdate(**filtered_update)
 
     listing = crud.update_listing(db, id, data)
     if not listing:

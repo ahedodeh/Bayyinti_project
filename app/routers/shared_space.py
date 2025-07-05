@@ -92,10 +92,8 @@ async def update_shared_space(
     for key in SharedSpaceUpdate.__annotations__:
         if key in form and form[key] != "":
             val = form[key]
-            # إذا كان الحقل Enum (room_type)، لازم تحوّله لنوع Enum
             if key == "room_type":
                 val = SharedSpaceTypeEnum(val)
-            # وإذا كان عدد (property_id) أو آخر، ضف هنا التحويلات اللازمة
 
             update_data[key] = val
 
