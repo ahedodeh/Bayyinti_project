@@ -4,7 +4,7 @@ import os
 
 from app.database import Base, engine
 from app import models
-from app.routers import room_router, property_listing_router, image_router, shared_space_router
+from app.routers import room_router, property_listing_router, image_router, shared_space_router, student_router
 
 app = FastAPI()
 
@@ -17,7 +17,11 @@ app.include_router(room_router)
 app.include_router(property_listing_router)
 app.include_router(image_router)
 app.include_router(shared_space_router)
+app.include_router(student_router)
 
 @app.get("/")
 def read_root():
     return {"message": "API is running"}
+
+# uvicorn app.main:app --reload
+#
