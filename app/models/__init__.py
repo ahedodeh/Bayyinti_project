@@ -1,4 +1,4 @@
-# from .student import Student
+from .student import Student
 # from .landlord import Landlord
 # from .building import Building
 from .property_listing import PropertyListing
