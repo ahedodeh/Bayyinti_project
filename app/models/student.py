@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, ForeignKey,Date, Enum as SqlEnum, DateTime, func
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -13,5 +13,6 @@ class Student(Base):
     degree = Column(String)
     gender = Column(String)
     user_id = Column(String, unique=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     # bookings = relationship("Booking", back_populates="student")
