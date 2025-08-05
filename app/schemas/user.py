@@ -1,4 +1,3 @@
-# app/schemas/user.py
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
@@ -11,14 +10,14 @@ class UserBase(BaseModel):
     Role: Optional[UserRole] = UserRole.STD
 
 class UserCreate(UserBase):
-    Password: Optional[str] = None  # optional to support Google registration
+    Password: Optional[str] = None  
 
 class UserUpdate(BaseModel):
-    Email: Optional[EmailStr]
-    Phone: Optional[str]
-    FullName: Optional[str]
-    Password: Optional[str]
-    Role: Optional[UserRole]
+    Email: Optional[EmailStr] = None
+    Phone: Optional[str] = None
+    FullName: Optional[str] = None
+    Password: Optional[str] = None
+    Role: Optional[UserRole] = None
 
 class UserOut(UserBase):
     UserId: int

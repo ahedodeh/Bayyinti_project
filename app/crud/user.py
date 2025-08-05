@@ -1,4 +1,3 @@
-# app/crud/user.py
 from sqlalchemy.orm import Session
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
@@ -24,8 +23,16 @@ def get_users_with_count(db: Session, page: int = 1, page_size: int = 10):
         "users": users
     }
 
-
 def create_user(db: Session, user: UserCreate):
+    existing_email = db.query(User).filter(User.Email == user.Email).first()
+    if existing_email:
+        raise ValueError("This email used before")
+
+    if user.Phone:
+        existing_phone = db.query(User).filter(User.Phone == user.Phone).first()
+        if existing_phone:
+            raise ValueError("This phone used before")
+
     hashed_password = pwd_context.hash(user.Password) if user.Password else None
     db_user = User(
         Email=user.Email,
@@ -43,7 +50,18 @@ def update_user(db: Session, user_id: int, user: UserUpdate):
     db_user = get_user(db, user_id)
     if not db_user:
         return None
+
     update_data = user.dict(exclude_unset=True)
+
+    if "Email" in update_data:
+        existing_email = db.query(User).filter(User.Email == update_data["Email"], User.UserId != user_id).first()
+        if existing_email:
+            raise ValueError("This email is already used")
+
+    if "Phone" in update_data:
+        existing_phone = db.query(User).filter(User.Phone == update_data["Phone"], User.UserId != user_id).first()
+        if existing_phone:
+            raise ValueError("This phone is already used")
 
     if "Password" in update_data and update_data["Password"]:
         update_data["Password"] = pwd_context.hash(update_data["Password"])
